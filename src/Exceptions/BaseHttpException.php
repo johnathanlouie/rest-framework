@@ -1,6 +1,6 @@
 <?php
 
-namespace Lwd\RestFramework;
+namespace Lwd\RestFramework\Exceptions;
 
 use RuntimeException;
 
