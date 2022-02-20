@@ -2,8 +2,8 @@
 
 namespace Lwd\RestFramework;
 
-use Lwd\RestFramework\Exceptions\BaseHttpException;
-use Lwd\RestFramework\Exceptions\NotImplemented;
+use Lwd\RestFramework\HttpExceptions\BaseHttpException;
+use Lwd\RestFramework\HttpExceptions\NotImplemented;
 
 /**
  * Controller is the base class for all route controllers.
