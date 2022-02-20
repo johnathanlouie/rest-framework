@@ -22,7 +22,7 @@ class HttpRequest
      * Gets the value of the route parameter.
      * 
      * @param string $param Route parameter.
-     * @return null|string|int|float|bool Argument.
+     * @return null|string Route argument.
      */
     public function pathArg($param)
     {
