@@ -3,6 +3,7 @@
 namespace Lwd\RestFramework;
 
 use Lwd\RestFramework\Exceptions\BaseHttpException;
+use Lwd\RestFramework\Exceptions\NotImplemented;
 
 /**
  * Controller is the base class for all route controllers.
@@ -26,14 +27,110 @@ class Controller
     }
 
     /**
-     * Executes the route controller.
+     * Executes the GET route.
      * 
      * @param HttpRequest $request HTTP request data.
      * @return mixed HTTP response data. Null is empty body.
-     * @throws BaseHttpException If something is wrong.
+     * @throws BaseHttpException If something went wrong.
      */
-    public function execute($request)
+    public function get($request)
     {
-        return null;
+        throw new NotImplemented();
+    }
+
+    /**
+     * Executes the HEAD route.
+     * 
+     * @param HttpRequest $request HTTP request data.
+     * @return mixed HTTP response data. Null is empty body.
+     * @throws BaseHttpException If something went wrong.
+     */
+    public function head($request)
+    {
+        throw new NotImplemented();
+    }
+
+    /**
+     * Executes the POST route.
+     * 
+     * @param HttpRequest $request HTTP request data.
+     * @return mixed HTTP response data. Null is empty body.
+     * @throws BaseHttpException If something went wrong.
+     */
+    public function post($request)
+    {
+        throw new NotImplemented();
+    }
+
+    /**
+     * Executes the PUT route.
+     * 
+     * @param HttpRequest $request HTTP request data.
+     * @return mixed HTTP response data. Null is empty body.
+     * @throws BaseHttpException If something went wrong.
+     */
+    public function put($request)
+    {
+        throw new NotImplemented();
+    }
+
+    /**
+     * Executes the DELETE route.
+     * 
+     * @param HttpRequest $request HTTP request data.
+     * @return mixed HTTP response data. Null is empty body.
+     * @throws BaseHttpException If something went wrong.
+     */
+    public function delete($request)
+    {
+        throw new NotImplemented();
+    }
+
+    /**
+     * Executes the CONNECT route.
+     * 
+     * @param HttpRequest $request HTTP request data.
+     * @return mixed HTTP response data. Null is empty body.
+     * @throws BaseHttpException If something went wrong.
+     */
+    public function connect($request)
+    {
+        throw new NotImplemented();
+    }
+
+    /**
+     * Executes the OPTIONS route.
+     * 
+     * @param HttpRequest $request HTTP request data.
+     * @return mixed HTTP response data. Null is empty body.
+     * @throws BaseHttpException If something went wrong.
+     */
+    public function options($request)
+    {
+        throw new NotImplemented();
+    }
+
+    /**
+     * Executes the TRACE route.
+     * 
+     * @param HttpRequest $request HTTP request data.
+     * @return mixed HTTP response data. Null is empty body.
+     * @throws BaseHttpException If something went wrong.
+     */
+    public function trace($request)
+    {
+        throw new NotImplemented();
+    }
+
+    /**
+     * Executes the PATCH route.
+     * 
+     * @param HttpRequest $request HTTP request data.
+     * @return mixed HTTP response data. Null is empty body.
+     * @throws BaseHttpException If something went wrong.
+     */
+    public function patch($request)
+    {
+        throw new NotImplemented();
     }
 }
