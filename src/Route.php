@@ -33,7 +33,7 @@ final class Route
      * @param string $path Whole request path or component.
      * @return bool
      */
-    private static function isParam($path)
+    public static function isParam($path)
     {
         return strpos($path, '{') !== false;
     }
