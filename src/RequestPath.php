@@ -77,7 +77,7 @@ class RequestPath
     }
 
     /**
-     * Gets an path element by index.
+     * Gets a path element by index.
      * 
      * @param int $index Index.
      * @return string Path element.
