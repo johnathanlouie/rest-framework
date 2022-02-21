@@ -6,3 +6,4 @@
 - Add authorization.
 - Handle query strings.
 - Handle request bodies.
+- Add session management.
