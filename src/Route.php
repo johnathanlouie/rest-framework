@@ -5,7 +5,7 @@ namespace Lwd\RestFramework;
 use Lwd\RestFramework\Exceptions\BadRoute;
 
 /**
- * Route.
+ * Route is a mapping from path to controller.
  * 
  * @internal
  */
@@ -17,14 +17,19 @@ class Route
     /** @var string[] Path elements. */
     private $elements;
 
+    /** @var Controller Controller. */
+    private $controller;
+
     /**
      * Constructs the path for the route.
      * 
      * @param string $path Route path.
+     * @param Controller $controller Controller.
      */
-    public function __construct($path)
+    public function __construct($path, $controller)
     {
         $this->$path = $path;
+        $this->$controller = $controller;
         $this->elements = explode('/', $path);
     }
 
@@ -101,6 +106,16 @@ class Route
             }
         }
         return $params;
+    }
+
+    /**
+     * Gets the controller for this route.
+     * 
+     * @return Controller
+     */
+    public function getController()
+    {
+        return $this->controller;
     }
 
     public function __toString()
