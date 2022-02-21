@@ -33,7 +33,7 @@ final class Route
      * @param string $path Whole request path or component.
      * @return bool
      */
-    public static function isParam($path)
+    public static function containsParam($path)
     {
         return strpos($path, '{') !== false;
     }
@@ -51,7 +51,7 @@ final class Route
         $request = explode('/', $request);
         if (count($route) === count($request)) {
             foreach (array_map(null, $route, $request) as $e) {
-                if (!self::isParam($e[0]) && $e[0] !== $e[1]) {
+                if (!self::containsParam($e[0]) && $e[0] !== $e[1]) {
                     return false;
                 }
             }
@@ -68,7 +68,7 @@ final class Route
     public function findMatch($path)
     {
         foreach ($this->paths as $route) {
-            if ($route === $path || self::isParam($route) && self::isMatch($route, $path)) {
+            if ($route === $path || self::containsParam($route) && self::isMatch($route, $path)) {
                 return $route;
             }
         }
