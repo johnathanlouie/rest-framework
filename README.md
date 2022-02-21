@@ -4,3 +4,5 @@
 - Add type declarations to route parameters.
 - Add authentication.
 - Add authorization.
+- Handle query strings.
+- Handle request bodies.
