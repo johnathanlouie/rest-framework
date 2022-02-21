@@ -12,12 +12,36 @@ class HttpRequest
     /** @var array Route parameters and arguments. */
     private $routeParams = [];
 
+    /** @var RequestPath Request path. */
+    private $path;
+
     /**
      * Constructs the HTTP request.
      */
-    public function __construct()
+    public function __construct($basePath)
     {
+        $this->path = new RequestPath($basePath);
         // TODO: Add other request data.
+    }
+
+    /**
+     * Gets the request path.
+     * 
+     * @return RequestPath
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * Gets the base path.
+     * 
+     * @return string Base path.
+     */
+    public function getBasePath()
+    {
+        return $this->path->getBasePath();
     }
 
     /**
