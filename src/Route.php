@@ -9,8 +9,8 @@ namespace Lwd\RestFramework;
  */
 final class Route
 {
-    /** @var string[] Paths supported by the controller. */
-    private $paths;
+    /** @var RoutePath[] Paths supported by the controller. */
+    private $paths = [];
 
     /** @var Controller Route controller. */
     private $controller;
@@ -23,52 +23,22 @@ final class Route
      */
     public function __construct($paths, $controller)
     {
-        $this->paths = $paths;
-        $this->controller = $controller;
-    }
-
-    /**
-     * Checks if the route contains a variable or if a path component is variable.
-     * 
-     * @param string $path Whole request path or component.
-     * @return bool
-     */
-    public static function containsParam($path)
-    {
-        return strpos($path, '{') !== false;
-    }
-
-    /**
-     * Checks if a route path matches the request path.
-     * 
-     * @param string $route A route path to match.
-     * @param string $request The request path.
-     * @return bool
-     */
-    private static function isMatch($route, $request)
-    {
-        $route = explode('/', $route);
-        $request = explode('/', $request);
-        if (count($route) === count($request)) {
-            foreach (array_map(null, $route, $request) as $e) {
-                if (!self::containsParam($e[0]) && $e[0] !== $e[1]) {
-                    return false;
-                }
-            }
-            return true;
+        foreach ($paths as $path) {
+            $this->paths[] = new RoutePath($path);
         }
-        return false;
+        $this->controller = $controller;
     }
 
     /**
      * Returns a matching route path.
      * 
-     * @return string|null Route path, or null if no match.
+     * @param RequestPath $requestPath Request path.
+     * @return RoutePath|null Route path, or null if no match.
      */
-    public function findMatch($path)
+    public function findMatch($requestPath)
     {
         foreach ($this->paths as $route) {
-            if ($route === $path || self::containsParam($route) && self::isMatch($route, $path)) {
+            if ($route->matches($requestPath)) {
                 return $route;
             }
         }
