@@ -72,9 +72,9 @@ class Route
         } else if (!self::containsParam($this->path)) {
             return false;
         } else if (count($this->elements) === $requestPath->getCount()) {
-            foreach (array_map(null, $this->elements, $requestPath->getElements()) as $elements) {
-                $route = $elements[0];
-                $request = $elements[1];
+            for ($i = 0; $i < count($this->elements); $i++) {
+                $route = $this->elements[$i];
+                $request = $requestPath->getElement($i);
                 if (!self::containsParam($route) && $route !== $request) {
                     return false;
                 }
@@ -98,11 +98,10 @@ class Route
         }
         $params = [];
         $count = count($this->elements);
-        $requestElements = $requestPath->getElements();
         for ($i = 0; $i < $count; $i++) {
             $route = $this->elements[$i];
             if (self::containsParam($route)) {
-                $params[$this->validateParam($route)] = $requestElements[$i];
+                $params[$this->validateParam($route)] = $requestPath->getElement($i);
             }
         }
         return $params;

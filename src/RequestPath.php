@@ -2,6 +2,8 @@
 
 namespace Lwd\RestFramework;
 
+use OutOfRangeException;
+
 /**
  * Request path.
  * 
@@ -15,7 +17,7 @@ class RequestPath
     /** @var string Base path. */
     private $basePath;
 
-    /** @var string Path split by slashes. */
+    /** @var string[] Path split by slashes. */
     private $elements;
 
     /** @var int Number of elements. */
@@ -72,6 +74,20 @@ class RequestPath
     public function getElements()
     {
         return $this->elements;
+    }
+
+    /**
+     * Gets an path element by index.
+     * 
+     * @param int $index Index.
+     * @return string Path element.
+     */
+    public function getElement($index)
+    {
+        if (!array_key_exists($index, $this->elements)) {
+            throw new OutOfRangeException();
+        }
+        return $this->elements[$index];
     }
 
     public function __toString()
