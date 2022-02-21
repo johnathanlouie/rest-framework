@@ -21,15 +21,14 @@ class HttpRequest
     }
 
     /**
-     * Sets a route parameter and argument.
+     * Sets route parameters and arguments.
      * 
-     * @param string $name Parameter name.
-     * @param string $value Argument value.
+     * @param string[] $routeParams Parameters and arguments map.
      * @return void
      */
-    public function setRouteParam($name, $value)
+    public function setRouteParams($routeParams)
     {
-        $this->routeParams[$name] = $value;
+        $this->routeParams = $routeParams;
     }
 
     /**
