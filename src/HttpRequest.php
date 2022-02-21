@@ -21,6 +21,16 @@ class HttpRequest
     }
 
     /**
+     * Gets which HTTP request method was used to access the page; e.g. 'GET', 'HEAD', 'POST', 'PUT'.
+     * 
+     * @return string HTTP request method.
+     */
+    public function getHttpMethod()
+    {
+        return $_SERVER['REQUEST_METHOD'];
+    }
+
+    /**
      * Sets route parameters and arguments.
      * 
      * @param string[] $routeParams Parameters and arguments map.
