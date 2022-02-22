@@ -7,3 +7,6 @@
 - Handle query strings.
 - Handle request bodies.
 - Add session management.
+- Add customizable error handlers.
+- Add logging.
+- Add middleware.
