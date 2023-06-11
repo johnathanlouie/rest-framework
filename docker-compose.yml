@@ -1,0 +1,5 @@
+services:
+  test:
+    build: docker/test
+    volumes:
+        - .:/app
