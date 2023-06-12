@@ -1,5 +1,6 @@
 services:
   test:
     build: docker/test
+    container_name: test
     volumes:
         - .:/app
