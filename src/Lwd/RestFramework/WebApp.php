@@ -13,8 +13,8 @@ use Throwable;
  * Main interface for the framework.
  * Add routes and then execute to run the app.
  */
-final class Api
-{
+final class WebApp {
+
     /** @var Route[][] Map of HTTP methods to list of routes. */
     private $routes = [
         HttpMethods::GET => [],
@@ -33,143 +33,131 @@ final class Api
 
     /**
      * Constructs the API.
-     * 
+     *
      * @param string $basePath Base path.
      */
-    public function __construct($basePath = '/')
-    {
+    public function __construct($basePath = '/') {
         $this->basePath = $basePath;
     }
 
     /**
      * Add route.
-     * 
+     *
      * @param string $method
      * @param string $path
      * @param Controller $controller
      * @return void
      */
-    private function addRoute($method, $path, $controller)
-    {
+    private function addRoute($method, $path, $controller) {
         $this->routes[$method][] = new Route($path, $controller);
     }
 
     /**
      * Add GET route.
-     * 
+     *
      * @param string $path
      * @param Controller $controller
      * @return void
      */
-    public function get($path, $controller)
-    {
+    public function get($path, $controller) {
         $this->addRoute(HttpMethods::GET, $path, $controller);
     }
 
     /**
      * Add HEAD route.
-     * 
+     *
      * @param string $path
      * @param Controller $controller
      * @return void
      */
-    public function head($path, $controller)
-    {
+    public function head($path, $controller) {
         $this->addRoute(HttpMethods::HEAD, $path, $controller);
     }
 
     /**
      * Add POST route.
-     * 
+     *
      * @param string $path
      * @param Controller $controller
      * @return void
      */
-    public function post($path, $controller)
-    {
+    public function post($path, $controller) {
         $this->addRoute(HttpMethods::POST, $path, $controller);
     }
 
     /**
      * Add PUT route.
-     * 
+     *
      * @param string $path
      * @param Controller $controller
      * @return void
      */
-    public function put($path, $controller)
-    {
+    public function put($path, $controller) {
         $this->addRoute(HttpMethods::PUT, $path, $controller);
     }
 
     /**
      * Add DELETE route.
-     * 
+     *
      * @param string $path
      * @param Controller $controller
      * @return void
      */
-    public function delete($path, $controller)
-    {
+    public function delete($path, $controller) {
         $this->addRoute(HttpMethods::DELETE, $path, $controller);
     }
 
     /**
      * Add CONNECT route.
-     * 
+     *
      * @param string $path
      * @param Controller $controller
      * @return void
      */
-    public function connect($path, $controller)
-    {
+    public function connect($path, $controller) {
         $this->addRoute(HttpMethods::CONNECT, $path, $controller);
     }
 
     /**
      * Add OPTIONS route.
-     * 
+     *
      * @param string $path
      * @param Controller $controller
      * @return void
      */
-    public function options($path, $controller)
-    {
+    public function options($path, $controller) {
         $this->addRoute(HttpMethods::OPTIONS, $path, $controller);
     }
 
     /**
      * Add TRACE route.
-     * 
+     *
      * @param string $path
      * @param Controller $controller
      * @return void
      */
-    public function trace($path, $controller)
-    {
+    public function trace($path, $controller) {
         $this->addRoute(HttpMethods::TRACE, $path, $controller);
     }
 
     /**
      * Add PATCH route.
-     * 
+     *
      * @param string $path
      * @param Controller $controller
      * @return void
      */
-    public function patch($path, $controller)
-    {
+    public function patch($path, $controller) {
         $this->addRoute(HttpMethods::PATCH, $path, $controller);
     }
 
     /**
      * Find a matching route for the HTTP request path.
-     * 
+     *
      * @return Route Matching route.
      * @throws RouteNotFound If route not found.
      */
-    private function findRoute($httpRequest)
-    {
+    private function findRoute($httpRequest) {
         $requestPath = $httpRequest->getPath()->getPath();
         foreach ($this->routes[$httpRequest->getHttpMethod()] as $route) {
             if ($route->matches($requestPath)) {
@@ -182,11 +170,10 @@ final class Api
     /**
      * Runs the app.
      * Main function.
-     * 
+     *
      * @return void
      */
-    public function execute()
-    {
+    public function execute() {
         try {
             try {
                 // Put together the request object.
@@ -255,6 +242,8 @@ final class Api
                 ]);
             }
         } catch (Throwable $t) {
+
         }
     }
+
 }
