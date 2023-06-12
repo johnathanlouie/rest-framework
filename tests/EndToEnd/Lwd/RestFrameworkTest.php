@@ -20,6 +20,7 @@ class RestFrameworkTest extends TestCase {
 
     /**
      * @dataProvider provideBasic
+     * @coversNothing
      * @param string $method REST verbs.
      * @return void
      */
