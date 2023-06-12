@@ -29,7 +29,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "EndToEnd\\Lwd\\RestFramework\\": "tests/EndToEnd/Lwd/RestFramework/"
+            "EndToEnd\\Lwd\\": "tests/EndToEnd/Lwd/"
         }
     }
 }
