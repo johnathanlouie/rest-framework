@@ -4,3 +4,9 @@ services:
     container_name: test
     volumes:
         - .:/app
+  web-server:
+    build: docker/web-server
+    container_name: web-server
+    volumes:
+      - ./docker/web-server/files/main.php:/app/main.php
+      - ./vendor:/app/vendor
