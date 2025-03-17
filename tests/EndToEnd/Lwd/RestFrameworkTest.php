@@ -2,13 +2,13 @@
 
 namespace EndToEnd\Lwd;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_TestCase;
 use Guzzle\Http\Client;
 
 /**
  * @author Johnathan Louie
  */
-class RestFrameworkTest extends TestCase {
+class RestFrameworkTest extends PHPUnit_Framework_TestCase {
 
     public function provideBasic() {
         yield ['GET'];
