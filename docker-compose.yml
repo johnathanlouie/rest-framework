@@ -1,12 +1,12 @@
 services:
-  test:
-    build: docker/test
-    container_name: test
+  dev:
+    container_name: dev-rest-framework
+    build: docker/dev
     volumes:
-        - .:/app
+      - .:/workspaces
   web-server:
     build: docker/web-server
-    container_name: web-server
+    container_name: web-server-rest-framework
     volumes:
       - ./docker/web-server/files/main.php:/app/main.php
       - ./vendor:/app/vendor
