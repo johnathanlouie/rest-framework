@@ -5,7 +5,7 @@ RUN echo "deb http://archive.debian.org/debian jessie contrib main non-free" > /
     apt-get update && apt-get install -y --force-yes ca-certificates && \
     update-ca-certificates
 
-RUN apt-get install -y --force-yes git
+RUN apt-get install -y --force-yes git libxml2-utils
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN install-php-extensions @composer-1 xdebug
