@@ -2,3 +2,4 @@ vendor/
 nbproject/
 .idea/
 phpunit.xsd
+composer.lock
