@@ -7,6 +7,9 @@ services:
   web-server:
     build: docker/web-server
     container_name: web-server-rest-framework
+    ports:
+      - "80:80"
     volumes:
       - ./docker/web-server/files/main.php:/app/main.php
+      - ./src:/app/src
       - ./vendor:/app/vendor
