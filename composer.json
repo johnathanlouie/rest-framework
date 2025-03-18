@@ -25,6 +25,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/johnathanlouie/http-server-handler"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/johnathanlouie/http-server-middleware"
         }
     ],
     "require": {
@@ -32,7 +36,8 @@
         "ext-json": "*",
         "lwd/http-message": "^2.0",
         "lwd/http-factory": "^1.1.0",
-        "lwd/http-server-handler": "^1.0.2"
+        "lwd/http-server-handler": "^1.0.2",
+        "lwd/http-server-middleware": "^1.0.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^3.7.22",
