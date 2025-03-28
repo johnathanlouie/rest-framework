@@ -10,6 +10,6 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./docker/web-server/files/main.php:/app/main.php
+      - ./docker/web-server/files:/app
       - ./src:/app/src
       - ./vendor:/app/vendor
