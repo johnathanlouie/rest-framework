@@ -2,12 +2,12 @@
 
 namespace Lwd\RestFramework\Exceptions;
 
-use RuntimeException;
+use Lwd\RestFramework\BaseException;
 
 /**
  * Request path has no matching route.
  */
-class RouteNotFound extends RuntimeException
+class RouteNotFound extends BaseException
 {
     /**
      * Constructs the exception.
