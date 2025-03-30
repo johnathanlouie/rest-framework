@@ -2,12 +2,12 @@
 
 namespace Lwd\RestFramework\Exceptions;
 
-use RuntimeException;
+use Lwd\RestFramework\BaseException;
 
 /**
  * Route has invalid syntax.
  */
-class BadRoute extends RuntimeException
+class BadRoute extends BaseException
 {
     /**
      * Constructs the exception.
