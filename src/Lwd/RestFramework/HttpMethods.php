@@ -33,4 +33,37 @@ abstract class HttpMethods
 
     /** @var string The PATCH method applies partial modifications to a resource. */
     const PATCH = 'PATCH';
+
+    /**
+     * Returns an array of standard HTTP methods.
+     *
+     * @return string[] Array of HTTP methods.
+     * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
+     */
+    public static function getMethods()
+    {
+        return [
+            self::GET,
+            self::HEAD,
+            self::POST,
+            self::PUT,
+            self::DELETE,
+            self::CONNECT,
+            self::OPTIONS,
+            self::TRACE,
+            self::PATCH,
+        ];
+    }
+
+    /**
+     * Checks if the given method is a valid HTTP method.
+     *
+     * @param string $method HTTP method to check.
+     * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
+     * @return boolean
+     */
+    public static function isValidMethod($method)
+    {
+        return in_array($method, self::getMethods(), false);
+    }
 }
