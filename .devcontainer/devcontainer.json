@@ -36,7 +36,7 @@
 				"files.trimFinalNewlines": false,
 				"files.insertFinalNewline": true,
 				"files.eol": "\n",
-                "intelephense.environment.phpVersion": "5.5"
+                "intelephense.environment.phpVersion": "5.5.38"
 			}
 		}
 	}
