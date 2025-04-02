@@ -36,13 +36,32 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
             }
         }
 
+        // Extract request target from server params, accounting for proxies
+        $requestTarget = null;
+
+        // Check for proxy headers first
+        if (isset($serverParams['HTTP_X_ORIGINAL_URL'])) {
+            $requestTarget = $serverParams['HTTP_X_ORIGINAL_URL'];
+        } elseif (isset($serverParams['HTTP_X_REWRITE_URL'])) {
+            $requestTarget = $serverParams['HTTP_X_REWRITE_URL'];
+        } elseif (isset($serverParams['HTTP_X_FORWARDED_URI'])) {
+            $requestTarget = $serverParams['HTTP_X_FORWARDED_URI'];
+        } elseif (isset($serverParams['REQUEST_URI'])) {
+            $requestTarget = $serverParams['REQUEST_URI'];
+        }
+
+        // Remove query string if present to get just the path
+        if ($requestTarget !== null && strpos($requestTarget, '?') !== false) {
+            $requestTarget = strstr($requestTarget, '?', true);
+        }
+
         return new ServerRequest(
             $method,
             $uri,
             $protocolVersion, // Use protocol version from server params
             $headers, // Use headers extracted from server params
             null, // Default body 
-            null, // Default request target
+            $requestTarget, // Request target extracted from server params
             $serverParams,
             $_COOKIE, // Use cookie superglobal
             $_GET, // Use query params from $_GET
