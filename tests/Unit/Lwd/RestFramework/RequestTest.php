@@ -24,11 +24,24 @@ class RequestTest extends PHPUnit_Framework_TestCase
      */
     protected $mockStream;
 
+    /**
+     * @var \Faker\Generator
+     */
+    protected $faker;
+
     protected function setUp()
     {
         // Create mocks for UriInterface and StreamInterface for testing
-        $this->mockUri = $this->getMock('Lwd\Http\Message\UriInterface');
-        $this->mockStream = $this->getMock('Lwd\Http\Message\StreamInterface');
+        $this->mockUri = $this->getMockBuilder('Lwd\Http\Message\UriInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->mockStream = $this->getMockBuilder('Lwd\Http\Message\StreamInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        // Initialize Faker
+        $this->faker = \Faker\Factory::create();
     }
 
     /**
@@ -40,11 +53,12 @@ class RequestTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $method = 'GET';
-        $protocolVersion = '1.1';
+        $method = $this->faker->randomElement(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']);
+        $protocolVersion = $this->faker->randomElement(['1.0', '1.1', '2.0']);
         $headers = [
-            'Content-Type' => ['application/json'],
-            'Accept' => ['application/json']
+            'Content-Type' => [$this->faker->mimeType()],
+            'Accept' => [$this->faker->mimeType()],
+            'X-Custom' => [$this->faker->word]
         ];
 
         $request = new Request($method, $this->mockUri, $protocolVersion, $headers, $this->mockStream);
@@ -72,14 +86,16 @@ class RequestTest extends PHPUnit_Framework_TestCase
      */
     public function testWithMethod()
     {
-        $request = new Request('GET', $this->mockUri, '1.1', [], $this->mockStream);
-        $newRequest = $request->withMethod('POST');
+        $originalMethod = 'GET';
+        $newMethod = 'POST';
+        $request = new Request($originalMethod, $this->mockUri, '1.1', [], $this->mockStream);
+        $newRequest = $request->withMethod($newMethod);
 
         // Test immutability - original is unchanged
-        $this->assertEquals('GET', $request->getMethod());
+        $this->assertEquals($originalMethod, $request->getMethod());
 
         // Test correctness - new instance has new method
-        $this->assertEquals('POST', $newRequest->getMethod());
+        $this->assertEquals($newMethod, $newRequest->getMethod());
 
         // Ensure it's a new instance
         $this->assertNotSame($request, $newRequest);
@@ -92,7 +108,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
      */
     public function testGetMethod()
     {
-        $method = 'GET';
+        $method = $this->faker->randomElement(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']);
         $request = new Request($method, $this->mockUri, '1.1', [], $this->mockStream);
 
         // Call method multiple times to verify it returns the same value
@@ -107,7 +123,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
      */
     public function testGetRequestTargetWithExplicitTarget()
     {
-        $requestTarget = '/explicit-target?query=value';
+        $requestTarget = '/' . $this->faker->slug . '?' . $this->faker->word . '=' . $this->faker->word;
         $request = new Request('GET', $this->mockUri, '1.1', [], $this->mockStream, $requestTarget);
 
         $this->assertEquals($requestTarget, $request->getRequestTarget());
@@ -122,17 +138,20 @@ class RequestTest extends PHPUnit_Framework_TestCase
      */
     public function testGetRequestTargetDerivedFromUri()
     {
+        $path = '/' . $this->faker->slug;
+        $query = $this->faker->word . '=' . $this->faker->word;
+
         // Set up URI mock to return a path and query
         $this->mockUri->expects($this->any())
             ->method('getPath')
-            ->will($this->returnValue('/test-path'));
+            ->will($this->returnValue($path));
 
         $this->mockUri->expects($this->any())
             ->method('getQuery')
-            ->will($this->returnValue('query=value'));
+            ->will($this->returnValue($query));
 
         $request = new Request('GET', $this->mockUri, '1.1', [], $this->mockStream);
-        $expectedTarget = '/test-path?query=value';
+        $expectedTarget = $path . '?' . $query;
 
         $this->assertEquals($expectedTarget, $request->getRequestTarget());
         // Test immutability - calling it again should return the same value
@@ -170,21 +189,22 @@ class RequestTest extends PHPUnit_Framework_TestCase
      */
     public function testGetRequestTargetWithPathNoQuery()
     {
+        $path = '/' . $this->faker->slug;
+
         // Set up URI mock to return a path but no query
         $this->mockUri->expects($this->any())
             ->method('getPath')
-            ->will($this->returnValue('/test-path'));
+            ->will($this->returnValue($path));
 
         $this->mockUri->expects($this->any())
             ->method('getQuery')
             ->will($this->returnValue(''));
 
         $request = new Request('GET', $this->mockUri, '1.1', [], $this->mockStream);
-        $expectedTarget = '/test-path';
 
-        $this->assertEquals($expectedTarget, $request->getRequestTarget());
+        $this->assertEquals($path, $request->getRequestTarget());
         // Test immutability - calling it again should return the same value
-        $this->assertEquals($expectedTarget, $request->getRequestTarget(), 'Request target should be immutable');
+        $this->assertEquals($path, $request->getRequestTarget(), 'Request target should be immutable');
     }
 
     /**
@@ -194,22 +214,24 @@ class RequestTest extends PHPUnit_Framework_TestCase
      */
     public function testWithRequestTarget()
     {
+        $defaultPath = '/default-path';
+
         // Set up URI mock with default values for getPath and getQuery
         $this->mockUri->expects($this->any())
             ->method('getPath')
-            ->will($this->returnValue('/default-path'));
+            ->will($this->returnValue($defaultPath));
 
         $this->mockUri->expects($this->any())
             ->method('getQuery')
             ->will($this->returnValue(''));
 
         $request = new Request('GET', $this->mockUri, '1.1', [], $this->mockStream);
-        $customTarget = '/custom-target';
+        $customTarget = '/' . $this->faker->slug;
         $newRequest = $request->withRequestTarget($customTarget);
 
         // Test immutability - original uses URI-derived target
-        $this->assertEquals('/default-path', $request->getRequestTarget());
-        $this->assertEquals('/default-path', $request->getRequestTarget(), 'Original request target should be immutable');
+        $this->assertEquals($defaultPath, $request->getRequestTarget());
+        $this->assertEquals($defaultPath, $request->getRequestTarget(), 'Original request target should be immutable');
 
         // Test correctness - new instance has custom target
         $this->assertEquals($customTarget, $newRequest->getRequestTarget());
@@ -243,7 +265,9 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $request = new Request('GET', $this->mockUri, '1.1', [], $this->mockStream);
 
         // Create a new mock URI
-        $newMockUri = $this->getMock('Lwd\Http\Message\UriInterface');
+        $newMockUri = $this->getMockBuilder('Lwd\Http\Message\UriInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $newRequest = $request->withUri($newMockUri);
 
@@ -269,10 +293,15 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $request = new Request('GET', $this->mockUri, '1.1', [], $this->mockStream);
 
         // Create a new mock URI that returns a host
-        $newMockUri = $this->getMock('Lwd\Http\Message\UriInterface');
+        $newMockUri = $this->getMockBuilder('Lwd\Http\Message\UriInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $host = $this->faker->domainName;
+
         $newMockUri->expects($this->any())
             ->method('getHost')
-            ->will($this->returnValue('example.com'));
+            ->will($this->returnValue($host));
 
         $newMockUri->expects($this->any())
             ->method('getPort')
@@ -284,8 +313,8 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($request->hasHeader('Host'));
 
         // Test that the Host header was set based on the URI's host
-        $this->assertEquals(['example.com'], $newRequest->getHeader('Host'));
-        $this->assertEquals(['example.com'], $newRequest->getHeader('Host'), 'Host header should be immutable');
+        $this->assertEquals([$host], $newRequest->getHeader('Host'));
+        $this->assertEquals([$host], $newRequest->getHeader('Host'), 'Host header should be immutable');
     }
 
     /**
@@ -298,14 +327,20 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $request = new Request('GET', $this->mockUri, '1.1', [], $this->mockStream);
 
         // Create a new mock URI that returns a host and port
-        $newMockUri = $this->getMock('Lwd\Http\Message\UriInterface');
+        $newMockUri = $this->getMockBuilder('Lwd\Http\Message\UriInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $host = $this->faker->domainName;
+        $port = $this->faker->numberBetween(1024, 65535);
+
         $newMockUri->expects($this->any())
             ->method('getHost')
-            ->will($this->returnValue('example.com'));
+            ->will($this->returnValue($host));
 
         $newMockUri->expects($this->any())
             ->method('getPort')
-            ->will($this->returnValue(8080));
+            ->will($this->returnValue($port));
 
         $newRequest = $request->withUri($newMockUri);
 
@@ -313,8 +348,9 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($request->hasHeader('Host'));
 
         // Test that the Host header was set based on the URI's host and port
-        $this->assertEquals(['example.com:8080'], $newRequest->getHeader('Host'));
-        $this->assertEquals(['example.com:8080'], $newRequest->getHeader('Host'), 'Host header should be immutable');
+        $expected = [$host . ':' . $port];
+        $this->assertEquals($expected, $newRequest->getHeader('Host'));
+        $this->assertEquals($expected, $newRequest->getHeader('Host'), 'Host header should be immutable');
     }
 
     /**
@@ -324,28 +360,34 @@ class RequestTest extends PHPUnit_Framework_TestCase
      */
     public function testWithUriPreservesHost()
     {
+        $originalHost = $this->faker->domainName;
         $headers = [
-            'Host' => ['original.example.com']
+            'Host' => [$originalHost]
         ];
 
         $request = new Request('GET', $this->mockUri, '1.1', $headers, $this->mockStream);
 
         // Create a new mock URI that returns a host
-        $newMockUri = $this->getMock('Lwd\Http\Message\UriInterface');
+        $newMockUri = $this->getMockBuilder('Lwd\Http\Message\UriInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $newHost = $this->faker->domainName;
+
         $newMockUri->expects($this->any())
             ->method('getHost')
-            ->will($this->returnValue('new.example.com'));
+            ->will($this->returnValue($newHost));
 
         // Use the preserveHost flag
         $newRequest = $request->withUri($newMockUri, true);
 
         // Test immutability - original is unchanged
-        $this->assertEquals(['original.example.com'], $request->getHeader('Host'));
-        $this->assertEquals(['original.example.com'], $request->getHeader('Host'), 'Original Host header should be immutable');
+        $this->assertEquals([$originalHost], $request->getHeader('Host'));
+        $this->assertEquals([$originalHost], $request->getHeader('Host'), 'Original Host header should be immutable');
 
         // Test that the original Host header was preserved
-        $this->assertEquals(['original.example.com'], $newRequest->getHeader('Host'));
-        $this->assertEquals(['original.example.com'], $newRequest->getHeader('Host'), 'Preserved Host header should be immutable');
+        $this->assertEquals([$originalHost], $newRequest->getHeader('Host'));
+        $this->assertEquals([$originalHost], $newRequest->getHeader('Host'), 'Preserved Host header should be immutable');
     }
 
     /**
@@ -358,7 +400,10 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $request = new Request('GET', $this->mockUri, '1.1', [], $this->mockStream);
 
         // Create a new mock URI that returns an empty host
-        $newMockUri = $this->getMock('Lwd\Http\Message\UriInterface');
+        $newMockUri = $this->getMockBuilder('Lwd\Http\Message\UriInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $newMockUri->expects($this->any())
             ->method('getHost')
             ->will($this->returnValue(''));

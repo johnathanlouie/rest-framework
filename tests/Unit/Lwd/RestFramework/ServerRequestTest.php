@@ -54,42 +54,64 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
      */
     protected $attributes;
 
+    /**
+     * @var \Faker\Generator
+     */
+    protected $faker;
+
     protected function setUp()
     {
-        // Create mocks for UriInterface and StreamInterface for testing
-        $this->mockUri = $this->getMock('Lwd\Http\Message\UriInterface');
-        $this->mockStream = $this->getMock('Lwd\Http\Message\StreamInterface');
+        // Initialize Faker
+        $this->faker = \Faker\Factory::create();
 
-        // Setup test data
+        // Create mocks for UriInterface and StreamInterface for testing
+        $this->mockUri = $this->getMockBuilder('Lwd\Http\Message\UriInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->mockStream = $this->getMockBuilder('Lwd\Http\Message\StreamInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        // Setup test data with Faker
         $this->serverParams = [
-            'SERVER_NAME' => 'example.com',
-            'REQUEST_METHOD' => 'POST',
-            'REMOTE_ADDR' => '127.0.0.1'
+            'SERVER_NAME' => $this->faker->domainName,
+            'REQUEST_METHOD' => $this->faker->randomElement(['GET', 'POST', 'PUT', 'DELETE']),
+            'REMOTE_ADDR' => $this->faker->ipv4
         ];
 
         $this->cookies = [
-            'session_id' => 'abc123',
-            'user_pref' => 'dark_mode'
+            'session_id' => $this->faker->sha1,
+            'user_pref' => $this->faker->randomElement(['dark_mode', 'light_mode'])
         ];
 
         $this->queryParams = [
-            'page' => '1',
-            'sort' => 'desc'
+            'page' => (string)$this->faker->numberBetween(1, 10),
+            'sort' => $this->faker->randomElement(['asc', 'desc'])
         ];
 
+        // Create mock uploaded files
+        $mockUploadedFile1 = $this->getMockBuilder('Lwd\Http\Message\UploadedFileInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockUploadedFile2 = $this->getMockBuilder('Lwd\Http\Message\UploadedFileInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->uploadedFiles = [
-            'file1' => $this->getMock('Lwd\Http\Message\UploadedFileInterface'),
-            'file2' => $this->getMock('Lwd\Http\Message\UploadedFileInterface')
+            'file1' => $mockUploadedFile1,
+            'file2' => $mockUploadedFile2
         ];
 
         $this->parsedBody = [
-            'username' => 'testuser',
-            'email' => 'test@example.com'
+            'username' => $this->faker->userName,
+            'email' => $this->faker->email
         ];
 
         $this->attributes = [
             'route' => 'user.profile',
-            'user_id' => 42
+            'user_id' => $this->faker->numberBetween(1, 1000)
         ];
     }
 
@@ -106,11 +128,11 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $method = 'POST';
-        $protocolVersion = '1.1';
+        $method = $this->faker->randomElement(['GET', 'POST', 'PUT', 'DELETE']);
+        $protocolVersion = $this->faker->randomElement(['1.0', '1.1', '2.0']);
         $headers = [
-            'Content-Type' => ['application/json'],
-            'Accept' => ['application/json']
+            'Content-Type' => [$this->faker->mimeType()],
+            'Accept' => [$this->faker->mimeType()]
         ];
         $requestTarget = null;
 
@@ -202,8 +224,8 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
     {
         $request = $this->createServerRequest();
         $newCookies = [
-            'theme' => 'light',
-            'language' => 'en'
+            'theme' => $this->faker->randomElement(['light', 'dark', 'system']),
+            'language' => $this->faker->languageCode
         ];
 
         $newRequest = $request->withCookieParams($newCookies);
@@ -244,8 +266,8 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
     {
         $request = $this->createServerRequest();
         $newQueryParams = [
-            'filter' => 'active',
-            'limit' => '50'
+            'filter' => $this->faker->word,
+            'limit' => (string)$this->faker->numberBetween(10, 100)
         ];
 
         $newRequest = $request->withQueryParams($newQueryParams);
@@ -284,7 +306,11 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
     public function testWithUploadedFiles()
     {
         $request = $this->createServerRequest();
-        $newUploadedFile = $this->getMock('Lwd\Http\Message\UploadedFileInterface');
+
+        $newUploadedFile = $this->getMockBuilder('Lwd\Http\Message\UploadedFileInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $newUploadedFiles = [
             'profile_pic' => $newUploadedFile
         ];
@@ -326,8 +352,8 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
     {
         $request = $this->createServerRequest();
         $newParsedBody = [
-            'name' => 'John Doe',
-            'age' => 30
+            'name' => $this->faker->name,
+            'age' => $this->faker->numberBetween(18, 80)
         ];
 
         $newRequest = $request->withParsedBody($newParsedBody);
@@ -353,8 +379,8 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
     {
         $request = $this->createServerRequest();
         $newParsedBody = new \stdClass();
-        $newParsedBody->name = 'John Doe';
-        $newParsedBody->age = 30;
+        $newParsedBody->name = $this->faker->name;
+        $newParsedBody->age = $this->faker->numberBetween(18, 80);
 
         $newRequest = $request->withParsedBody($newParsedBody);
 
@@ -408,14 +434,16 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
     public function testGetAttribute()
     {
         $request = $this->createServerRequest();
+        $userId = $this->attributes['user_id'];
 
         // Test getting existing attribute
-        $this->assertEquals(42, $request->getAttribute('user_id'));
-        $this->assertEquals(42, $request->getAttribute('user_id'), 'Attribute should be immutable');
+        $this->assertEquals($userId, $request->getAttribute('user_id'));
+        $this->assertEquals($userId, $request->getAttribute('user_id'), 'Attribute should be immutable');
 
         // Test getting non-existent attribute with default
-        $this->assertEquals('default', $request->getAttribute('non_existent', 'default'));
-        $this->assertEquals('default', $request->getAttribute('non_existent', 'default'), 'Default should be consistently returned');
+        $defaultValue = $this->faker->word;
+        $this->assertEquals($defaultValue, $request->getAttribute('non_existent', $defaultValue));
+        $this->assertEquals($defaultValue, $request->getAttribute('non_existent', $defaultValue), 'Default should be consistently returned');
 
         // Test getting non-existent attribute without default
         $this->assertNull($request->getAttribute('non_existent'));
@@ -430,19 +458,22 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
     public function testWithAttribute()
     {
         $request = $this->createServerRequest();
-        $newRequest = $request->withAttribute('role', 'admin');
+        $attributeName = 'role';
+        $attributeValue = $this->faker->randomElement(['admin', 'user', 'guest']);
+        $newRequest = $request->withAttribute($attributeName, $attributeValue);
 
         // Test immutability - original is unchanged
-        $this->assertFalse(isset($request->getAttributes()['role']));
+        $this->assertFalse(isset($request->getAttributes()[$attributeName]));
         $this->assertEquals($this->attributes, $request->getAttributes(), 'Original attributes should be immutable');
 
         // Test correctness - new instance has new attribute
-        $this->assertEquals('admin', $newRequest->getAttribute('role'));
-        $this->assertEquals('admin', $newRequest->getAttribute('role'), 'New attribute should be immutable');
+        $this->assertEquals($attributeValue, $newRequest->getAttribute($attributeName));
+        $this->assertEquals($attributeValue, $newRequest->getAttribute($attributeName), 'New attribute should be immutable');
 
         // Original attributes should still be present in new instance
-        $this->assertEquals(42, $newRequest->getAttribute('user_id'));
-        $this->assertEquals(42, $newRequest->getAttribute('user_id'), 'Existing attribute should be immutable');
+        $userId = $this->attributes['user_id'];
+        $this->assertEquals($userId, $newRequest->getAttribute('user_id'));
+        $this->assertEquals($userId, $newRequest->getAttribute('user_id'), 'Existing attribute should be immutable');
 
         // Ensure it's a new instance
         $this->assertNotSame($request, $newRequest);
@@ -456,17 +487,19 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
     public function testWithoutAttribute()
     {
         $request = $this->createServerRequest();
-        $newRequest = $request->withoutAttribute('user_id');
+        $attributeToRemove = 'user_id';
+        $userId = $this->attributes['user_id'];
+        $newRequest = $request->withoutAttribute($attributeToRemove);
 
         // Test immutability - original is unchanged
-        $this->assertEquals(42, $request->getAttribute('user_id'));
-        $this->assertEquals(42, $request->getAttribute('user_id'), 'Original attribute should be immutable');
+        $this->assertEquals($userId, $request->getAttribute($attributeToRemove));
+        $this->assertEquals($userId, $request->getAttribute($attributeToRemove), 'Original attribute should be immutable');
         $this->assertEquals($this->attributes, $request->getAttributes(), 'Original attributes should be immutable');
 
         // Test correctness - new instance has attribute removed
-        $this->assertNull($newRequest->getAttribute('user_id'));
-        $this->assertNull($newRequest->getAttribute('user_id'), 'Removed attribute should consistently return null');
-        $this->assertFalse(isset($newRequest->getAttributes()['user_id']));
+        $this->assertNull($newRequest->getAttribute($attributeToRemove));
+        $this->assertNull($newRequest->getAttribute($attributeToRemove), 'Removed attribute should consistently return null');
+        $this->assertFalse(isset($newRequest->getAttributes()[$attributeToRemove]));
 
         // Other attributes should still be present
         $this->assertEquals('user.profile', $newRequest->getAttribute('route'));
@@ -484,7 +517,8 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
     public function testWithoutAttributeNonExistent()
     {
         $request = $this->createServerRequest();
-        $newRequest = $request->withoutAttribute('non_existent');
+        $nonExistentAttribute = $this->faker->word . '_' . $this->faker->numberBetween(1000, 9999);
+        $newRequest = $request->withoutAttribute($nonExistentAttribute);
 
         // Test immutability - original is unchanged
         $this->assertEquals($this->attributes, $request->getAttributes());
