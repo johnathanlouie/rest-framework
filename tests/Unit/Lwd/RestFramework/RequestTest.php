@@ -8,6 +8,7 @@ use Lwd\Http\Message\StreamInterface;
 use PHPUnit_Framework_TestCase;
 use Faker\Factory;
 use Faker\Generator;
+use PHPUnit_Framework_MockObject_MockObject;
 
 /**
  * Tests for the Request class
@@ -17,7 +18,7 @@ use Faker\Generator;
 class RequestTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var UriInterface
+     * @var PHPUnit_Framework_MockObject_MockObject|UriInterface
      */
     protected $mockUri;
 
