@@ -5,6 +5,8 @@ namespace Tests\Unit\Lwd\RestFramework;
 use Lwd\RestFramework\Message;
 use Lwd\Http\Message\StreamInterface;
 use PHPUnit_Framework_TestCase;
+use Faker\Factory;
+use Faker\Generator;
 
 /**
  * Tests for the Message class
@@ -19,14 +21,14 @@ class MessageTest extends PHPUnit_Framework_TestCase
     protected $mockStream;
 
     /**
-     * @var \Faker\Generator
+     * @var Generator
      */
     protected $faker;
 
     protected function setUp()
     {
         // Initialize Faker
-        $this->faker = \Faker\Factory::create();
+        $this->faker = Factory::create();
 
         // Create a mock of StreamInterface for testing
         $this->mockStream = $this->getMockBuilder('Lwd\Http\Message\StreamInterface')

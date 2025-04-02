@@ -6,6 +6,9 @@ use Lwd\RestFramework\ServerRequest;
 use Lwd\Http\Message\UriInterface;
 use Lwd\Http\Message\StreamInterface;
 use PHPUnit_Framework_TestCase;
+use Faker\Factory;
+use Faker\Generator;
+use stdClass;
 
 /**
  * Tests for the ServerRequest class
@@ -55,14 +58,14 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
     protected $attributes;
 
     /**
-     * @var \Faker\Generator
+     * @var Generator
      */
     protected $faker;
 
     protected function setUp()
     {
         // Initialize Faker
-        $this->faker = \Faker\Factory::create();
+        $this->faker = Factory::create();
 
         // Create mocks for UriInterface and StreamInterface for testing
         $this->mockUri = $this->getMockBuilder('Lwd\Http\Message\UriInterface')
@@ -378,7 +381,7 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
     public function testWithParsedBodyObject()
     {
         $request = $this->createServerRequest();
-        $newParsedBody = new \stdClass();
+        $newParsedBody = new stdClass();
         $newParsedBody->name = $this->faker->name;
         $newParsedBody->age = $this->faker->numberBetween(18, 80);
 
