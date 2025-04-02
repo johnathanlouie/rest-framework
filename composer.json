@@ -1,7 +1,10 @@
 {
     "name": "lwd/rest-framework",
     "description": "Simple PHP framework for web application and API development",
-    "keywords": ["rest", "api"],
+    "keywords": [
+        "rest",
+        "api"
+    ],
     "type": "library",
     "authors": [
         {
@@ -51,7 +54,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "EndToEnd\\Lwd\\": "tests/EndToEnd/Lwd/"
+            "EndToEnd\\Lwd\\": "tests/EndToEnd/Lwd/",
+            "Unit\\Lwd\\": "tests/Unit/Lwd/"
         }
     }
 }
