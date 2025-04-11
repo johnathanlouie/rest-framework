@@ -10,3 +10,7 @@
 - Add customizable error handlers.
 - Add logging.
 - Add middleware.
+
+# IDE Support
+VS Code v1.98.2
+ms-vscode-remote.remote-containers v0.401.0
