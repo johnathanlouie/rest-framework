@@ -1,0 +1,38 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Default settings for all files
+[*]
+charset = utf-8
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+
+# PHP specific settings
+[*.php]
+# No additional space after opening PHP tag as per claude.md
+# (Editor can't enforce this but developers should know)
+
+# YAML files (used for configuration)
+[*.{yml,yaml}]
+indent_size = 2
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
+
+# JSON files
+[*.json]
+indent_size = 4
+
+# XML files
+[*.xml]
+indent_size = 4
+
+# Config files often use 2-space indentation
+[*.{conf,config}]
+indent_size = 2
