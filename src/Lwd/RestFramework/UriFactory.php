@@ -92,10 +92,7 @@ class UriFactory implements UriFactoryInterface
     public function createUri($uri = '')
     {
         if (!is_string($uri)) {
-            throw new InvalidArgumentException(sprintf(
-                'URI must be a string, %s given.',
-                gettype($uri)
-            ));
+            throw new InvalidArgumentException(sprintf('URI must be a string, %s given.', gettype($uri)));
         }
 
         $uri = trim($uri);
