@@ -113,8 +113,9 @@ class Uri implements UriInterface
             return '';
         }
 
-        // If the path is absolute, ensure it starts with a forward slash
-        if ($path[0] !== '/') {
+        // Only add a leading slash for absolute paths when there's a host
+        // For relative paths or URIs without authority (mailto:, news:), preserve the original path
+        if ($path[0] !== '/' && !empty($this->host)) {
             return '/' . $path;
         }
 
