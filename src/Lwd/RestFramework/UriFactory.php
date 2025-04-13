@@ -157,6 +157,23 @@ class UriFactory implements UriFactoryInterface
     }
 
     /**
+     * Check for invalid percent encoding in a URI string.
+     *
+     * According to RFC 3986, percent-encoded octets must use the format %XX
+     * where X is a hexadecimal digit (0-9, A-F). This validation ensures that
+     * any percent encoding in the URI is properly formed.
+     * 
+     * @param string $uri The URI to check
+     * @return bool True if invalid percent encoding is found, false otherwise
+     * @link https://tools.ietf.org/html/rfc3986#section-2.1 RFC 3986 Section 2.1: Percent-Encoding
+     */
+    private static function hasInvalidPercentEncoding($uri)
+    {
+        // Find any % character that is not followed by two hexadecimal digits
+        return preg_match('/%(?![0-9A-Fa-f]{2})/', $uri) > 0;
+    }
+
+    /**
      * Validate a URI scheme according to RFC 3986 section 3.1.
      * 
      * A scheme must begin with a letter and can be followed by any combination of
