@@ -91,7 +91,6 @@ class UriFactory implements UriFactoryInterface
      */
     public function createUri($uri = '')
     {
-        // Check if the URI is a string
         if (!is_string($uri)) {
             throw new InvalidArgumentException(sprintf(
                 'URI must be a string, %s given.',
@@ -99,15 +98,12 @@ class UriFactory implements UriFactoryInterface
             ));
         }
 
-        // Trim whitespace from URI
         $uri = trim($uri);
 
-        // If URI is empty, return an empty instance
         if ($uri === '') {
             return new Uri('');
         }
 
-        // Basic URI validation
         if ($this->hasInvalidCharacters($uri)) {
             throw new InvalidArgumentException(
                 'URI contains invalid characters.'
