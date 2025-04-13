@@ -7,6 +7,25 @@ use InvalidArgumentException;
 
 /**
  * Implementation of a URI according to RFC 3986.
+ * 
+ * This class provides a standards-compliant implementation of URI objects
+ * with support for all components defined in the RFC 3986 specification.
+ * 
+ * Empty URI Behavior:
+ * An empty URI string ('') is a valid reference according to RFC 3986 and
+ * serves specific purposes in different contexts:
+ * 
+ * - It represents a relative reference to the current document or context
+ * - All URI components (scheme, authority, path, query, fragment) are undefined or empty
+ * - Functions as a self-reference within documents (like an empty href attribute in HTML)
+ * - Can serve as a base URI for resolving other relative references
+ * - Provides a suitable default value when initializing URI objects
+ * - Acts as a placeholder when programmatically building URIs
+ * 
+ * When working with empty URIs, the implementation treats them as properly formed
+ * relative references with all components being empty strings or null values.
+ * 
+ * @link https://tools.ietf.org/html/rfc3986 RFC 3986: Uniform Resource Identifier
  */
 class Uri implements UriInterface
 {
@@ -183,7 +202,7 @@ class Uri implements UriInterface
         if (!empty($this->userInfo)) {
             $authority = $this->userInfo . '@' . $authority;
         }
-        
+
         if ($this->port !== null) {
             $authority .= ':' . $this->port;
         }
@@ -252,7 +271,7 @@ class Uri implements UriInterface
         $new = clone $this;
         $new->scheme = $scheme;
         $new->port = $this->normalizePort($this->port, $scheme);
-        
+
         return $new;
     }
 
@@ -272,7 +291,7 @@ class Uri implements UriInterface
 
         $new = clone $this;
         $new->userInfo = $userInfo;
-        
+
         return $new;
     }
 
@@ -288,7 +307,7 @@ class Uri implements UriInterface
 
         $new = clone $this;
         $new->host = $host;
-        
+
         return $new;
     }
 
@@ -313,7 +332,7 @@ class Uri implements UriInterface
 
         $new = clone $this;
         $new->port = $port;
-        
+
         return $new;
     }
 
@@ -329,7 +348,7 @@ class Uri implements UriInterface
 
         $new = clone $this;
         $new->path = $path;
-        
+
         return $new;
     }
 
@@ -345,7 +364,7 @@ class Uri implements UriInterface
 
         $new = clone $this;
         $new->query = $query;
-        
+
         return $new;
     }
 
@@ -361,7 +380,7 @@ class Uri implements UriInterface
 
         $new = clone $this;
         $new->fragment = $fragment;
-        
+
         return $new;
     }
 
@@ -371,26 +390,26 @@ class Uri implements UriInterface
     public function __toString()
     {
         $uri = '';
-        
+
         if ($this->scheme !== '') {
             $uri .= $this->scheme . ':';
         }
-        
+
         $authority = $this->getAuthority();
         if ($authority !== '' || $this->scheme === 'file') {
             $uri .= '//' . $authority;
         }
-        
+
         $uri .= $this->path;
-        
+
         if ($this->query !== '') {
             $uri .= '?' . $this->query;
         }
-        
+
         if ($this->fragment !== '') {
             $uri .= '#' . $this->fragment;
         }
-        
+
         return $uri;
     }
 }
