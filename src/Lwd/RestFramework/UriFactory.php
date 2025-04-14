@@ -112,11 +112,8 @@ class UriFactory implements UriFactoryInterface
         // Parse the URI components
         $components = parse_url($uri);
 
-        // Check if parsing succeeded
         if ($components === false) {
-            throw new InvalidArgumentException(
-                'Unable to parse URI: ' . $uri
-            );
+            throw new InvalidArgumentException("Unable to parse URI $uri");
         }
 
         if (isset($components['scheme']) && !self::isValidScheme($components['scheme'])) {
