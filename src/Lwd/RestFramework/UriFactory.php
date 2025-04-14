@@ -121,12 +121,10 @@ class UriFactory implements UriFactoryInterface
             $this->validateScheme($components['scheme']);
         }
 
-        // Validate port if present
-        if (isset($components['port'])) {
-            $this->validatePort($components['port']);
+        if (isset($components['port']) && !self::isValidPort($components['port'])) {
+            throw new InvalidArgumentException("Port must be between 1 and 65535, got {$components['port']}");
         }
 
-        // Create the URI instance
         return new Uri($uri);
     }
 
@@ -253,17 +251,20 @@ class UriFactory implements UriFactoryInterface
      * This validation ensures that URIs created by this factory will always have
      * valid port numbers that can be used in actual network connections.
      *
+     * Port numbers are 16-bit unsigned integers (0-65535), but port 0 is reserved
+     * and not available for use in URIs. Therefore, only port numbers 1-65535 are
+     * considered valid for URI authority components.
+     *
      * @param int|string $port The port to validate
-     * @throws InvalidArgumentException If the port is invalid
+     * @return bool True if the port is valid, false otherwise
+     * @link https://tools.ietf.org/html/rfc793 RFC 793: Transmission Control Protocol
      */
-    private function validatePort($port)
+    private static function isValidPort($port)
     {
-        // Port must be an integer between 1 and 65535
         $port = (int) $port;
         if ($port < 1 || $port > 65535) {
-            throw new InvalidArgumentException(
-                sprintf('Invalid port: %d. Must be between 1 and 65535', $port)
-            );
+            return false;
         }
+        return true;
     }
 }
