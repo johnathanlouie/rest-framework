@@ -109,7 +109,6 @@ class UriFactory implements UriFactoryInterface
             throw new InvalidArgumentException('Malformed percent encoding in URI');
         }
 
-        // Parse the URI components
         $components = parse_url($uri);
 
         if ($components === false) {
