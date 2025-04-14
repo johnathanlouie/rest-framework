@@ -116,9 +116,8 @@ class UriFactory implements UriFactoryInterface
             );
         }
 
-        // Validate scheme if present
-        if (isset($components['scheme'])) {
-            $this->validateScheme($components['scheme']);
+        if (isset($components['scheme']) && !self::isValidScheme($components['scheme'])) {
+            throw new InvalidArgumentException("Invalid URI scheme {$components['scheme']}");
         }
 
         if (isset($components['port']) && !self::isValidPort($components['port'])) {
@@ -224,24 +223,12 @@ class UriFactory implements UriFactoryInterface
      * with standards.
      *
      * @param string $scheme The scheme to validate
-     * @throws InvalidArgumentException If the scheme is invalid
+     * @return bool True if the scheme is valid, false otherwise
      * @link https://tools.ietf.org/html/rfc3986#section-3.1 RFC 3986 Section 3.1
      */
-    private function validateScheme($scheme)
+    private static function isValidScheme($scheme)
     {
-        // Scheme must be a string
-        if (!is_string($scheme)) {
-            throw new InvalidArgumentException(
-                'Scheme must be a string'
-            );
-        }
-
-        // RFC 3986 Section 3.1: Scheme must start with a letter and consist of letters, digits, plus, period, or hyphen
-        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9+\-.]*$/', $scheme)) {
-            throw new InvalidArgumentException(
-                'Scheme "' . $scheme . '" does not conform to RFC 3986 section 3.1.'
-            );
-        }
+        return preg_match('/^[a-zA-Z][a-zA-Z0-9+.-]*$/', $scheme) === 1;
     }
 
     /**
