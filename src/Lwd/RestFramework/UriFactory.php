@@ -104,6 +104,9 @@ class UriFactory implements UriFactoryInterface
         if (self::hasInvalidCharacters($uri)) {
             throw new InvalidArgumentException('Invalid characters in URI');
         }
+
+        if (self::hasInvalidPercentEncoding($uri)) {
+            throw new InvalidArgumentException('Malformed percent encoding in URI');
         }
 
         // Parse the URI components
