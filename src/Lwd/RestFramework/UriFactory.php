@@ -101,10 +101,9 @@ class UriFactory implements UriFactoryInterface
             return new Uri('');
         }
 
-        if ($this->hasInvalidCharacters($uri)) {
-            throw new InvalidArgumentException(
-                'URI contains invalid characters.'
-            );
+        if (self::hasInvalidCharacters($uri)) {
+            throw new InvalidArgumentException('Invalid characters in URI');
+        }
         }
 
         // Parse the URI components
@@ -134,19 +133,33 @@ class UriFactory implements UriFactoryInterface
     /**
      * Check if a URI string contains invalid characters.
      * 
-     * According to RFC 3986, certain characters are not permitted in URIs, including
-     * whitespace and control characters. These must be percent-encoded if they are to
-     * be included in a valid URI. This validation prevents security issues and ensures
-     * consistent behavior across different systems.
+     * According to RFC 3986, URIs must only contain characters from the US-ASCII character set,
+     * and even within ASCII, many characters are restricted:
+     * 
+     * 1. Control characters (0x00-0x1F, 0x7F): Non-printable characters are not allowed
+     * 2. Whitespace characters: Spaces, tabs, line feeds, etc. must be percent-encoded
+     * 3. Unsafe characters: <, >, ", `, \, ^, {, }, |, etc. must be percent-encoded
+     * 4. Reserved characters when not used for their reserved purpose: :, /, ?, #, [, ], etc.
+     * 
+     * Valid characters in URIs include:
+     * - Unreserved: A-Z, a-z, 0-9, hyphen, period, underscore, and tilde (0x41-0x5A, 0x61-0x7A, 0x30-0x39, 0x2D, 0x2E, 0x5F, 0x7E)
+     * - Reserved (when used properly): :, /, ?, #, [, ], @, !, $, &, ', (, ), *, +, ,, ;, = 
+     *   (0x3A, 0x2F, 0x3F, 0x23, 0x5B, 0x5D, 0x40, 0x21, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x3B, 0x3D)
+     * 
+     * Additionally, any non-ASCII characters (such as Unicode/UTF-8) must be percent-encoded 
+     * before inclusion in a URI. All such characters must be properly percent-encoded to 
+     * their UTF-8 byte sequences to ensure proper interpretation across all systems.
+     *
+     * Non-conforming URIs can cause interoperability issues, security vulnerabilities,
+     * and inconsistent behavior across different systems.
      *
      * @param string $uri The URI to validate
-     * @return bool True if contains invalid chars, false otherwise
+     * @return bool True if the URI contains invalid characters, false otherwise
      * @link https://tools.ietf.org/html/rfc3986#section-2 RFC 3986 Section 2: Characters
      */
-    private function hasInvalidCharacters($uri)
+    private static function hasInvalidCharacters($uri)
     {
-        // Check for unencoded spaces and control characters
-        return preg_match('/\s|[\x00-\x1F\x7F]/', $uri) === 1;
+        return preg_match('/[^\x21\x24-\x29\x2A-\x3B\x3D\x3F-\x5B\x5D\x5F\x61-\x7A\7E]/', $uri) > 0;
     }
 
     /**
