@@ -249,9 +249,6 @@ class UriFactory implements UriFactoryInterface
     private static function isValidPort($port)
     {
         $port = (int) $port;
-        if ($port < 1 || $port > 65535) {
-            return false;
-        }
-        return true;
+        return 1 <= $port && $port <= 65535;
     }
 }
