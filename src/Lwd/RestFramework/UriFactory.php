@@ -171,7 +171,7 @@ class UriFactory implements UriFactoryInterface
      */
     private static function hasInvalidPercentEncoding($uri)
     {
-        return preg_match('/%([^0-9A-Fa-f][0-9A-Fa-f]|[0-9A-Fa-f][^0-9A-Fa-f]|[^0-9A-Fa-f][^0-9A-Fa-f]|$)/', $uri) === 1;
+        return preg_match('/%([^0-9A-Fa-f][0-9A-Fa-f]|[0-9A-Fa-f][^0-9A-Fa-f]|[^0-9A-Fa-f][^0-9A-Fa-f]|[0-9A-Fa-f]$|[^0-9A-Fa-f]$|$)/', $uri) === 1;
     }
 
     /**

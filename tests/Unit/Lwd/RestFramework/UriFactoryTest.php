@@ -272,6 +272,8 @@ class UriFactoryTest extends PHPUnit_Framework_TestCase
     {
         return [
             ['http://example.com/%'], // Incomplete percent encoding
+            ['http://example.com/%A'], // Incomplete percent encoding
+            ['http://example.com/%G'], // Incomplete percent encoding
             ['http://example.com/%G0'], // Invalid hex digit
             ['http://example.com/%0G'], // Invalid hex digit
         ];
