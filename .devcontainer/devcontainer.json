@@ -30,6 +30,7 @@
 				"bmewburn.vscode-intelephense-client",
 				"xdebug.php-debug",
 				"neilbrayfield.php-docblocker",
+				"DEVSENSE.composer-php-vscode",
 				"ms-azuretools.vscode-docker"
 			],
 			"settings": {
