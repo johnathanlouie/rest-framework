@@ -9,7 +9,7 @@ use PHPUnit_Framework_TestCase;
 
 /**
  * Unit tests for the UriFactory class.
- * 
+ *
  * Tests UriFactory's ability to create properly validated URI objects
  * according to RFC 3986 specifications, including various edge cases
  * and special formats.
@@ -194,7 +194,7 @@ class UriFactoryTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test creating URI with non-string input.
-     * 
+     *
      * @dataProvider invalidTypeProvider
      */
     public function testCreateUriWithInvalidType($input)
