@@ -157,7 +157,7 @@ class UriFactory implements UriFactoryInterface
      */
     private static function hasInvalidCharacters($uri)
     {
-        return preg_match('/[^\x21\x24-\x29\x2A-\x3B\x3D\x3F-\x5B\x5D\x5F\x61-\x7A\7E]/', $uri) === 1;
+        return preg_match('/[^\x21\x23-\x29\x2A-\x3B\x3D\x3F-\x5B\x5D\x5F\x61-\x7A\7E]/', $uri) === 1;
     }
 
     /**
