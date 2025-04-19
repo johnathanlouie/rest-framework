@@ -31,6 +31,7 @@
 				"xdebug.php-debug",
 				"neilbrayfield.php-docblocker",
 				"DEVSENSE.composer-php-vscode",
+				"EditorConfig.EditorConfig",
 				"ms-azuretools.vscode-docker"
 			],
 			"settings": {
