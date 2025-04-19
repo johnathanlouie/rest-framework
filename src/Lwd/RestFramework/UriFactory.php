@@ -110,7 +110,7 @@ class UriFactory implements UriFactoryInterface
         }
 
         // TODO: Handle malformed Punycode encoding
-        // TODO: parse_url can incorectly parse
+        // TODO: parse_url can incorrectly parse
         $components = parse_url($uri);
 
         if ($components === false) {
