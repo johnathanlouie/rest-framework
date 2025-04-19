@@ -8,8 +8,8 @@ use InvalidArgumentException;
 
 /**
  * Factory for creating URI instances.
- * 
- * This implementation creates instances of the Uri class from the Lwd\RestFramework 
+ *
+ * This implementation creates instances of the Uri class from the Lwd\RestFramework
  * following PSR-17 specifications. The factory is responsible for constructing
  * well-formed URI objects that conform to RFC 3986.
  *
@@ -18,16 +18,16 @@ use InvalidArgumentException;
  * error handling throughout the application and promotes cleaner architecture.
  *
  * URI Structure according to RFC 3986:
- * 
+ *
  *     URI = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
- *     
+ *
  *     hier-part = "//" authority path
  *                 / path
- *     
+ *
  *     authority = [ userinfo "@" ] host [ ":" port ]
- * 
+ *
  * Visual breakdown of URI components:
- * 
+ *
  *     http://username:password@example.com:8042/over/there?name=ferret#nose
  *     \__/   \________________/\_________/ \__/\________/ \_________/ \__/
  *      |              |             |       |      |           |        |
@@ -43,13 +43,13 @@ use InvalidArgumentException;
  * Important: The ":" and "//" are distinct syntactic elements, not a single "://" entity:
  * - The ":" (colon) is a delimiter that marks the end of the scheme
  * - The "//" (double slash) is a separate indicator that an authority component follows
- * 
+ *
  * These are separate elements because some URI schemes use the colon without the double slash:
  *   - "http://example.com" - uses both the colon and double slash
  *   - "mailto:user@example.com" - uses only the colon, without double slash
- * 
+ *
  * Special case examples:
- * 
+ *
  * 1. File URI with empty authority:
  *     file:///path/to/file.txt
  *     \__/ \/ \_____________/
@@ -57,7 +57,7 @@ use InvalidArgumentException;
  *   scheme  |       path
  *           |
  *      empty authority
- * 
+ *
  * 2. Mailto URI with no authority component:
  *     mailto:user@example.com
  *     \____/ \____________/
@@ -130,22 +130,22 @@ class UriFactory implements UriFactoryInterface
 
     /**
      * Check if a URI string contains invalid characters.
-     * 
+     *
      * According to RFC 3986, URIs must only contain characters from the US-ASCII character set,
      * and even within ASCII, many characters are restricted:
-     * 
+     *
      * 1. Control characters (0x00-0x1F, 0x7F): Non-printable characters are not allowed
      * 2. Whitespace characters: Spaces, tabs, line feeds, etc. must be percent-encoded
      * 3. Unsafe characters: <, >, ", `, \, ^, {, }, |, etc. must be percent-encoded
      * 4. Reserved characters when not used for their reserved purpose: :, /, ?, #, [, ], etc.
-     * 
+     *
      * Valid characters in URIs include:
      * - Unreserved: A-Z, a-z, 0-9, hyphen, period, underscore, and tilde (0x41-0x5A, 0x61-0x7A, 0x30-0x39, 0x2D, 0x2E, 0x5F, 0x7E)
-     * - Reserved (when used properly): :, /, ?, #, [, ], @, !, $, &, ', (, ), *, +, ,, ;, = 
+     * - Reserved (when used properly): :, /, ?, #, [, ], @, !, $, &, ', (, ), *, +, ,, ;, =
      *   (0x3A, 0x2F, 0x3F, 0x23, 0x5B, 0x5D, 0x40, 0x21, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x3B, 0x3D)
-     * 
-     * Additionally, any non-ASCII characters (such as Unicode/UTF-8) must be percent-encoded 
-     * before inclusion in a URI. All such characters must be properly percent-encoded to 
+     *
+     * Additionally, any non-ASCII characters (such as Unicode/UTF-8) must be percent-encoded
+     * before inclusion in a URI. All such characters must be properly percent-encoded to
      * their UTF-8 byte sequences to ensure proper interpretation across all systems.
      *
      * Non-conforming URIs can cause interoperability issues, security vulnerabilities,
@@ -166,7 +166,7 @@ class UriFactory implements UriFactoryInterface
      * According to RFC 3986, percent-encoded octets must use the format %XX
      * where X is a hexadecimal digit (0-9, A-F). This validation ensures that
      * any percent encoding in the URI is properly formed.
-     * 
+     *
      * @param string $uri The URI to check
      * @return bool True if invalid percent encoding is found, false otherwise
      * @link https://tools.ietf.org/html/rfc3986#section-2.1 RFC 3986 Section 2.1: Percent-Encoding
@@ -178,7 +178,7 @@ class UriFactory implements UriFactoryInterface
 
     /**
      * Validate a URI scheme according to RFC 3986 section 3.1.
-     * 
+     *
      * A scheme must begin with a letter and can be followed by any combination of
      * letters, digits, plus ("+"), period ("."), or hyphen ("-"). These restrictions
      * are designed to ensure interoperability and avoid conflicts with existing and
@@ -186,18 +186,18 @@ class UriFactory implements UriFactoryInterface
      *
      * Format: scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
      *
-     * In a complete URI, the scheme is terminated with a colon (":") delimiter, 
-     * which separates it from the rest of the URI. However, the colon is not part 
+     * In a complete URI, the scheme is terminated with a colon (":") delimiter,
+     * which separates it from the rest of the URI. However, the colon is not part
      * of the scheme itself and should not be included when validating the scheme.
-     * 
+     *
      * After the scheme and colon, the URI may have:
      * 1. "//" followed by an authority component (e.g., "http://example.com")
      * 2. A path component directly (e.g., "mailto:user@example.com")
-     * 
+     *
      * The colon and double slashes are distinct syntactic elements:
      * - ":" marks the end of the scheme
      * - "//" (when present) indicates the beginning of an authority component
-     * 
+     *
      * They are not a single "://" entity, which is why some schemes like "mailto:"
      * have the colon but not the double slashes.
      *
@@ -233,7 +233,7 @@ class UriFactory implements UriFactoryInterface
 
     /**
      * Validate a URI port.
-     * 
+     *
      * Port numbers are limited by the TCP/IP specification to the range 1-65535.
      * This validation ensures that URIs created by this factory will always have
      * valid port numbers that can be used in actual network connections.
