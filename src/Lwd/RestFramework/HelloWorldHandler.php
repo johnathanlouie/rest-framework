@@ -9,7 +9,7 @@ use Lwd\Http\Server\RequestHandlerInterface;
 
 /**
  * A simple Hello World request handler.
- * 
+ *
  * This handler responds to all requests with a "Hello, World!" response.
  * It implements the PSR-15 RequestHandlerInterface.
  */
@@ -17,20 +17,20 @@ class HelloWorldHandler implements RequestHandlerInterface
 {
     /** @var ResponseFactoryInterface */
     private $responseFactory;
-    
+
     /**
      * Constructs the handler with a response factory.
-     * 
+     *
      * @param ResponseFactoryInterface $responseFactory Factory to create response objects
      */
     public function __construct($responseFactory)
     {
         $this->responseFactory = $responseFactory;
     }
-    
+
     /**
      * Handles a server request and produces a response.
-     * 
+     *
      * @param ServerRequestInterface $request The server request
      * @return ResponseInterface The response
      */
@@ -38,14 +38,14 @@ class HelloWorldHandler implements RequestHandlerInterface
     {
         // Create a response
         $response = $this->responseFactory->createResponse(200);
-        
+
         // Get a writable body stream
         $body = $response->getBody();
         $body->write('Hello, World!');
-        
+
         // Set content type header
         $response = $response->withHeader('Content-Type', 'text/plain');
-        
+
         return $response;
     }
 }
