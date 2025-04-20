@@ -8,18 +8,18 @@ use Lwd\Http\Message\ServerRequestInterface;
 use Lwd\Http\Server\RequestHandlerInterface;
 
 /**
- * A simple Hello World request handler.
+ * A simple Hello World controller.
  *
- * This handler responds to all requests with a "Hello, World!" response.
+ * This controller responds to all requests with a "Hello, World!" response.
  * It implements the PSR-15 RequestHandlerInterface.
  */
-class HelloWorldHandler implements RequestHandlerInterface
+class HelloWorldController extends Controller implements RequestHandlerInterface
 {
     /** @var ResponseFactoryInterface */
     private $responseFactory;
 
     /**
-     * Constructs the handler with a response factory.
+     * Constructs the controller with a response factory.
      *
      * @param ResponseFactoryInterface $responseFactory Factory to create response objects
      */
