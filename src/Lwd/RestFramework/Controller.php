@@ -13,10 +13,10 @@ use Lwd\RestFramework\HttpExceptions\NotImplemented;
 /**
  * PSR-compliant base controller.
  *
- * This class implements the PSR-15 RequestHandlerInterface and serves as the foundation for 
+ * This class implements the PSR-15 RequestHandlerInterface and serves as the foundation for
  * all controllers in the framework. It delegates HTTP verb-specific handling (GET, POST, etc.)
  * to dedicated methods. Each method accepts a ServerRequestInterface and a mutable ResponseInterface
- * (initially created via a ResponseFactoryInterface) and should return a finalized instance of 
+ * (initially created via a ResponseFactoryInterface) and should return a finalized instance of
  * ResponseInterface, constructed according to PSR-7/PSR-17 guidelines.
  *
  * Controllers extending this base class must override these methods to implement application-specific logic.
@@ -38,7 +38,7 @@ class Controller implements RequestHandlerInterface
 
     /**
      * Sets the initial state of the controller.
-     * 
+     *
      * @return void
      */
     public function init() {}
@@ -78,7 +78,7 @@ class Controller implements RequestHandlerInterface
 
     /**
      * Executes the GET route.
-     * 
+     *
      * Retrieves data from the server. This method is safe and idempotent, used to fetch state or information about a resource.
      *
      * This method receives a blank PSR‑7 HTTP response and is expected to populate and return a finalized response.
@@ -95,7 +95,7 @@ class Controller implements RequestHandlerInterface
 
     /**
      * Executes the HEAD route.
-     * 
+     *
      * Retrieves only the headers of a resource without its body.
      * This is useful for obtaining metadata about the resource.
      *
@@ -113,7 +113,7 @@ class Controller implements RequestHandlerInterface
 
     /**
      * Executes the POST route.
-     * 
+     *
      * Sends data to the server to create a new resource.
      * This method is not idempotent; multiple calls may create duplicate resources.
      *
@@ -131,7 +131,7 @@ class Controller implements RequestHandlerInterface
 
     /**
      * Executes the PUT route.
-     * 
+     *
      * Fully replaces an existing resource with the provided data.
      * This method is idempotent, meaning multiple identical requests produce the same result.
      *
@@ -149,7 +149,7 @@ class Controller implements RequestHandlerInterface
 
     /**
      * Executes the DELETE route.
-     * 
+     *
      * Removes the specified resource from the server.
      * This operation is idempotent.
      *
@@ -167,7 +167,7 @@ class Controller implements RequestHandlerInterface
 
     /**
      * Executes the CONNECT route.
-     * 
+     *
      * Establishes a tunnel to the server identified by the target resource.
      * It is less common in typical RESTful API interactions.
      *
@@ -185,7 +185,7 @@ class Controller implements RequestHandlerInterface
 
     /**
      * Executes the OPTIONS route.
-     * 
+     *
      * Describes all the communication options available for the target resource.
      * Often used to determine allowed methods or perform CORS checks.
      *
@@ -203,7 +203,7 @@ class Controller implements RequestHandlerInterface
 
     /**
      * Executes the TRACE route.
-     * 
+     *
      * Echoes back the received request for diagnostic purposes.
      * This allows the client to view what (if any) alterations or intermediaries have modified the request.
      *
@@ -221,7 +221,7 @@ class Controller implements RequestHandlerInterface
 
     /**
      * Executes the PATCH route.
-     * 
+     *
      * Applies partial modifications to a resource.
      * Only specific fields within the resource are updated, rather than replacing it entirely.
      *
